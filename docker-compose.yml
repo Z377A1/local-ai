@@ -1,6 +1,8 @@
 models:
   llama3-2:
     model: ai/llama3.2:3B-F16
+  qwen2-5-coder:
+    model: hf.co/Qwen/Qwen2.5-Coder-7B
 
 services:
   open-webui:
@@ -18,6 +20,7 @@ services:
       - open-webui:/app/backend/data
     models:
       - llama3-2
+      - qwen2-5-coder
 
 volumes:
   open-webui:
