@@ -1,6 +1,7 @@
 models:
   llama3-2:
     model: ai/llama3.2:3B-F16
+    # model: ai/llama3.2:3B-Q4_K_M
   # qwen2-5-coder:
   #   model: hf.co/Qwen/Qwen2.5-Coder-7B
 
@@ -11,6 +12,8 @@ services:
       - "3000:8080"
     environment:
       - OLLAMA_BASE_URL=http://host.docker.internal:12434
+      - OLLAMA_NUM_PARALLEL=6 # Matches your benchmark peak
+      - OLLAMA_MAX_LOADED_MODELS=1 # Keeps all VRAM for your main model
       - WEBUI_AUTH=false
       # If you prefer to use the OpenAI-compatible API instead of the Ollama API, set the following environment variable:
       - OPENAI_API_KEY=not-needed
