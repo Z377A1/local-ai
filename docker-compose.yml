@@ -1,28 +1,33 @@
 models:
-  llama3-2:
-    model: ai/llama3.2:3B-F16
-    # model: ai/llama3.2:3B-Q4_K_M
+  gemma4:
+    model: gemma4:e2b
+  # llama3-2:
+  #   model: llama3.2:3B-F16
+  #   # model: llama3.2:3B-Q4_K_M
   # qwen2-5-coder:
   #   model: hf.co/Qwen/Qwen2.5-Coder-7B
 
 services:
   open-webui:
-    image: ghcr.io/open-webui/open-webui:main-slim
+    image: ghcr.io/open-webui/open-webui:main
+    restart: unless-stopped
     ports:
       - "3000:8080"
     environment:
       - OLLAMA_BASE_URL=http://host.docker.internal:12434
-      - OLLAMA_NUM_PARALLEL=6 # Matches your benchmark peak
-      - OLLAMA_MAX_LOADED_MODELS=1 # Keeps all VRAM for your main model
-      - WEBUI_AUTH=false
+      # - WEBUI_AUTH=false
+      # Use OpenAI-compatible API instead
+      # - OPENAI_API_BASE_URL=http://host.docker.internal:12434/v1
+      # API key (use any value for DMR (Docker Model Runner))
       # If you prefer to use the OpenAI-compatible API instead of the Ollama API, set the following environment variable:
-      - OPENAI_API_KEY=not-needed
+      # - OPENAI_API_KEY=not-needed
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
       - open-webui:/app/backend/data
     models:
-      - llama3-2
+      - gemma4
+      # - llama3-2
       # - qwen2-5-coder
 
 volumes:

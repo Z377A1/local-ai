@@ -1,5 +1,7 @@
+ARG IMAGE_VERSION=slim
+
 # Use Python 3.11 slim image as base
-FROM python:3.11-slim
+FROM python:${IMAGE_VERSION}
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1

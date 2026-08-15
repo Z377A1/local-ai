@@ -4,6 +4,8 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile
+      args:
+        - IMAGE_VERSION=${PYTHON_VERSION}
     container_name: chatterbox-tts-api-cpu
     ports:
       - "${PORT:-4123}:${PORT:-4123}"
@@ -30,7 +32,7 @@ services:
       - LONG_TEXT_MAX_CONCURRENT_JOBS=${LONG_TEXT_MAX_CONCURRENT_JOBS:-3}
 
       # Voice and Model Settings
-      - VOICE_SAMPLE_PATH=/app/voice-sample.mp3
+      # - VOICE_SAMPLE_PATH=/app/voice-sample.mp3
       - DEVICE=cpu # Force CPU for this variant
       - MODEL_CACHE_DIR=/cache
       - VOICE_LIBRARY_DIR=/voices
@@ -42,7 +44,7 @@ services:
 
     volumes:
       # Mount voice sample file (optional)
-      - ${VOICE_SAMPLE_HOST_PATH:-../voice-sample.mp3}:/app/voice-sample.mp3:ro
+      # - ${VOICE_SAMPLE_HOST_PATH:-../voice-sample.mp3}:/app/voice-sample.mp3:ro
 
       # Mount model cache for persistence
       - chatterbox-models:/cache
@@ -67,8 +69,5 @@ services:
 
 volumes:
   chatterbox-models:
-    driver: local
   chatterbox-voices:
-    driver: local
   chatterbox-longtext-data:
-    driver: local
