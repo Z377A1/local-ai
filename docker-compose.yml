@@ -1,11 +1,15 @@
-models:
-  gemma4:
-    model: gemma4:e2b
-  # llama3-2:
-  #   model: llama3.2:3B-F16
-  #   # model: llama3.2:3B-Q4_K_M
-  # qwen2-5-coder:
-  #   model: hf.co/Qwen/Qwen2.5-Coder-7B
+# Docker Model Runner (DMR) models.
+# DMR only offers GPU acceleration on Windows for NVIDIA (CUDA) cards, so on an
+# Intel Arc GPU it falls back to CPU. Models are instead served by Ollama running
+# natively on Windows with Vulkan (see README). Uncomment to go back to DMR.
+# models:
+#   gemma4:
+#     model: gemma4:e2b
+#   llama3-2:
+#     model: llama3.2:3B-F16
+#     # model: llama3.2:3B-Q4_K_M
+#   qwen2-5-coder:
+#     model: hf.co/Qwen/Qwen2.5-Coder-7B
 
 services:
   open-webui:
@@ -14,21 +18,23 @@ services:
     ports:
       - "3000:8080"
     environment:
-      - OLLAMA_BASE_URL=http://host.docker.internal:12434
+      # Native Ollama on the Windows host (GPU via Vulkan on Intel Arc)
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      # Docker Model Runner instead (CPU-only on Intel Arc):
+      # - OLLAMA_BASE_URL=http://host.docker.internal:12434
       # - WEBUI_AUTH=false
       # Use OpenAI-compatible API instead
-      # - OPENAI_API_BASE_URL=http://host.docker.internal:12434/v1
-      # API key (use any value for DMR (Docker Model Runner))
-      # If you prefer to use the OpenAI-compatible API instead of the Ollama API, set the following environment variable:
+      # - OPENAI_API_BASE_URL=http://host.docker.internal:11434/v1
       # - OPENAI_API_KEY=not-needed
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
       - open-webui:/app/backend/data
-    models:
-      - gemma4
-      # - llama3-2
-      # - qwen2-5-coder
+    # Only needed when using Docker Model Runner models above:
+    # models:
+    #   - gemma4
+    #   - llama3-2
+    #   - qwen2-5-coder
 
 volumes:
   open-webui:
